@@ -7,6 +7,7 @@ import { StyleSheet } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { setTransactions } from "../redux/slices/transactionReducer.js";
 import TotalInvested from "../components/TotalInvested.jsx";
+import Transaction from "../components/Transaction.jsx";
 import { LinearGradient } from "expo-linear-gradient";
 
 const home = () => {
@@ -44,6 +45,8 @@ const home = () => {
       .catch((error) => console.error(error));
   }, []);
 
+  const transactions = useSelector((state) => state.transactions.transactions);
+
   return (
     <ScrollView
       contentContainerStyle={{
@@ -62,17 +65,26 @@ const home = () => {
       </View>
       <TotalInvested />
       <View style={styles.containerButtons}>
-        <LinearGradient colors={["#3740DD", "#545BE7"]} style={styles.gradientBuy}>
+        <LinearGradient
+          colors={["#3740DD", "#545BE7"]}
+          style={styles.gradientBuy}
+        >
           <TouchableHighlight>
             <Text style={styles.textButton}>Comprar</Text>
           </TouchableHighlight>
         </LinearGradient>
-        <LinearGradient colors={["#1F1F1F", "#000000"]} style={styles.gradientSell}>
+        <LinearGradient
+          colors={["#1F1F1F", "#000000"]}
+          style={styles.gradientSell}
+        >
           <TouchableHighlight>
             <Text style={styles.textButton}>Vender</Text>
           </TouchableHighlight>
         </LinearGradient>
       </View>
+      {transactions.map((transaction) => (
+        <Transaction key={transaction.id} transaction={transaction} />
+      ))}
     </ScrollView>
   );
 };

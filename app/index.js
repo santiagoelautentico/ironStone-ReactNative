@@ -1,8 +1,11 @@
 import { View } from "react-native";
 import Login from "../pages/login";
 import { StyleSheet } from "react-native";
+// import { useFonts } from "expo-font";
 
 export default function index() {
+
+
   return (
     <View style={styles.container}>
       <Login />

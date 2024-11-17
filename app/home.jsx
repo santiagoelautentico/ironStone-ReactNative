@@ -22,9 +22,13 @@ import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Picker } from "@react-native-picker/picker";
 import { TextInput } from "react-native";
+import { Stack } from "expo-router";
+import { useHeaderHeight } from "@react-navigation/elements";
 
 const Home = () => {
-  const name = useSelector((state) => state.login.username);
+  const headerHeight = useHeaderHeight();
+
+  const username = useSelector((state) => state.login.username);
   const userId = useSelector((state) => state.login.userId);
   const apiKey = useSelector((state) => state.login.apiKey);
   const coins = useSelector((state) => state.coins.coins);
@@ -118,97 +122,123 @@ const Home = () => {
   };
 
   return (
-    <GestureHandlerRootView style={styles.container}>
-      <Image source={bgTop} style={styles.bgTop} />
-      {/* <View style={styles.header}>
-        <MaterialCommunityIcons
-          name="face-man-profile"
-          size={24}
-          color="black"
-        />
-        <Text style={styles.nameUser}>{name}</Text>
-      </View> */}
-      <View style={styles.containerHeader}>
-        <TotalInvested />
-        <View style={styles.containerButtons}>
-          <LinearGradient
-            colors={["#3740DD", "#545BE7"]}
-            style={styles.gradientBuy}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                setHandleTransaction(1);
-                handleOpenModal();
-              }}
-              style={styles.button}
-            >
-              <Text style={styles.textButton}>Comprar</Text>
-            </TouchableOpacity>
-          </LinearGradient>
-          <LinearGradient
-            colors={["#1F1F1F", "#000000"]}
-            style={styles.gradientSell}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                setHandleTransaction(2);
-                handleOpenModal();
-              }}
-              style={styles.button}
-            >
-              <Text style={styles.textButton}>Vender</Text>
-            </TouchableOpacity>
-          </LinearGradient>
+    <>
+      <GestureHandlerRootView style={{ flex: 1, backgroundColor: "#171717" }}>
+        <View style={{ flex: 1, flexGrow: 1 }}>
+          <Image source={bgTop} />
         </View>
-      </View>
-      <Text style={styles.title}>Historial de transacciones</Text>
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        {[...transactions].reverse().map((transaction) => (
-          <Transaction key={transaction.id} transaction={transaction} />
-        ))}
-      </ScrollView>
-      <BottomSheet
-        snapPoints={snapPoints}
-        index={1}
-        ref={bottomSheetRef}
-        enablePanDownToClose={true}
-      >
-        <BottomSheetView style={styles.contentContainer}>
-          <Text style={styles.titleBuy}>Elige una moneda</Text>
-          <Picker
-            selectedValue={selectedCoin}
-            onValueChange={(coinValue) => setSelectedCoin(coinValue)}
-            style={styles.picker}
-          >
-            <Picker.Item
-              label="Seleccione una moneda"
-              value=""
-              key="0"
-              disabled
-            />
-            {coins.map((coin) => (
-              <Picker.Item key={coin.id} label={coin.nombre} value={coin.id} />
-            ))}
-          </Picker>
-          <TextInput
-            placeholder="Ingrese una cantidad"
-            value={cantCoin.toString()}
-            style={styles.input}
-            onChangeText={(text) => handlerValue(text)}
+        <ScrollView style={{ paddingTop: headerHeight }}>
+          <Stack.Screen
+            options={{
+              headerBlurEffect: "regular",
+              headerTransparent: true,
+              headerTitleStyle: {
+                fontWeight: "bold",
+              },
+              headerTitle: () => (
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <Text
+                    style={{ color: "#fff", marginLeft: 8, fontWeight: "bold" }}
+                  >
+                    IronStone
+                  </Text>
+                </View>
+              ),
+            }}
           />
-          <Button title="Comprar" onPress={handlerBuy} color="#007bff" />
-          {msgTotal > 0 && <Text>{msgTotal}</Text>}
-        </BottomSheetView>
-      </BottomSheet>
-    </GestureHandlerRootView>
+          <View style={styles.header}>
+            <MaterialCommunityIcons
+              name="face-man-profile"
+              size={24}
+              color="black"
+            />
+            <Text style={styles.nameUser}>{username}</Text>
+          </View>
+          <View style={styles.containerHeader}>
+            <TotalInvested />
+            <View style={styles.containerButtons}>
+              <LinearGradient
+                colors={["#3740DD", "#545BE7"]}
+                style={styles.gradientBuy}
+              >
+                <TouchableOpacity
+                  onPress={() => {
+                    setHandleTransaction(1);
+                    handleOpenModal();
+                  }}
+                  style={styles.button}
+                >
+                  <Text style={styles.textButton}>Comprar</Text>
+                </TouchableOpacity>
+              </LinearGradient>
+              <LinearGradient
+                colors={["#1F1F1F", "#000000"]}
+                style={styles.gradientSell}
+              >
+                <TouchableOpacity
+                  onPress={() => {
+                    setHandleTransaction(2);
+                    handleOpenModal();
+                  }}
+                  style={styles.button}
+                >
+                  <Text style={styles.textButton}>Vender</Text>
+                </TouchableOpacity>
+              </LinearGradient>
+            </View>
+          </View>
+          <Text style={styles.title}>Historial de transacciones</Text>
+          <ScrollView contentContainerStyle={styles.scrollViewContent}>
+            {[...transactions].reverse().map((transaction) => (
+              <Transaction key={transaction.id} transaction={transaction} />
+            ))}
+          </ScrollView>
+        </ScrollView>
+        <BottomSheet
+          snapPoints={snapPoints}
+          index={1}
+          ref={bottomSheetRef}
+          enablePanDownToClose={true}
+          backgroundStyle={{ backgroundColor: "#121212" }}
+          handleIndicatorStyle={{ backgroundColor: "white" }}
+        >
+          <BottomSheetView style={styles.contentContainer}>
+            <Text style={styles.titleBuy}>Elige una moneda</Text>
+            <Picker
+              selectedValue={selectedCoin}
+              onValueChange={(coinValue) => setSelectedCoin(coinValue)}
+              style={styles.picker}
+            >
+              <Picker.Item
+                label="Seleccione una moneda"
+                value=""
+                key="0"
+                disabled
+              />
+              {coins.map((coin) => (
+                <Picker.Item
+                  key={coin.id}
+                  label={coin.nombre}
+                  value={coin.id}
+                />
+              ))}
+            </Picker>
+            <TextInput
+              placeholder="Ingrese una cantidad"
+              value={cantCoin.toString()}
+              style={styles.input}
+              onChangeText={(text) => handlerValue(text)}
+            />
+            <Button title="Comprar" onPress={handlerBuy} color="#007bff" />
+            {msgTotal > 0 && <Text>{msgTotal}</Text>}
+          </BottomSheetView>
+        </BottomSheet>
+      </GestureHandlerRootView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#171717",
-    flex: 1,
-  },
   scrollViewContent: {
     paddingHorizontal: 40,
     gap: 20,
@@ -218,11 +248,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
+    paddingHorizontal: 40,
+    paddingTop: 40,
   },
   containerHeader: {
-    paddingTop: 60,
+    paddingTop: 40,
     paddingBottom: 40,
     paddingHorizontal: 40,
+    gap: 20,
   },
   nameUser: {
     fontSize: 20,
@@ -275,6 +308,9 @@ const styles = StyleSheet.create({
   bgTop: {
     position: "absolute",
     top: 0,
+    width: "100%",
+    flex: 1,
+    flexGrow: 1,
   },
   titleBuy: {
     color: "white",
@@ -284,7 +320,7 @@ const styles = StyleSheet.create({
     height: 50,
     color: "white",
     backgroundColor: "#333333",
-  }
+  },
 });
 
 export default Home;

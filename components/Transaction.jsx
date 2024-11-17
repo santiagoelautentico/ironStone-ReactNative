@@ -1,7 +1,8 @@
 import { Text, View } from "react-native";
 import { useSelector } from "react-redux";
 import { LinearGradient } from "expo-linear-gradient";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
+
 
 function Transaction({ transaction }) {
   const coins = useSelector((state) => state.coins.coins);
@@ -35,7 +36,7 @@ function Transaction({ transaction }) {
             )}
           </Text>
         </View>
-        <View style={{ flexDirection: "row", gap: 10, width: "100%" }}>
+        <View style={{ flexDirection: "row", gap: 10, width: "100%", paddingBottom: Platform.OS == "ios" ? 0 : 20 }}>
           <Text style={styles.text}>Cant: {transaction.cantidad}</Text>
           <Text style={styles.text}>Cotización: {transaction.valorActual}</Text>
         </View>

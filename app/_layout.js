@@ -9,8 +9,7 @@ export default function layout() {
   return (
     <Provider store={store}>
       <View style={styles.container}>
-        <Stack
-          screenOptions={{ title: "", headerShown: false }}/>
+        <Stack />
       </View>
     </Provider>
   );
@@ -18,5 +17,6 @@ export default function layout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#171717",
   },
 });

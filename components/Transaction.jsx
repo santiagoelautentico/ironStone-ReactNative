@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 21,
     paddingBottom: 10,
-    fontFamily: "PP Mondwest Regular",
+    fontFamily: "PP Mondwest",
     paddingBottom: 0,
   },
   header: {
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   amount: {
-    fontFamily: "PP Mondwest Regular",
+    fontFamily: "PP Mondwest",
     color: "white",
     fontSize: 21,
     fontWeight: "regular",

@@ -32,13 +32,14 @@ const TotalInvested = () => {
 };
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "gray",
+    backgroundColor: 'rgba(53, 52, 62, 0.3)',
     paddingHorizontal: 20,
     paddingVertical: 30,
     borderRadius: 10,
   },
   title: {
     fontSize: 21,
+    color: "white",
   },
   amount: {
     fontSize: 32,
@@ -46,11 +47,13 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     gap: 6,
+    color: "white",
   },
   usd: {
     fontWeight: "normal",
     opacity: 0.7,
     fontSize: 21,
+    color: "white",
   },
 });
 export default TotalInvested;

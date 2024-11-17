@@ -29,7 +29,7 @@
         "expo-font",
         {
           "custom": {
-            "PP Mondwest Regular": "./assets/fonts/PP Mondwest Regular.otf"
+            "PP Mondwest": "./assets/fonts/PP Mondwest.otf"
           }
         }
       ]

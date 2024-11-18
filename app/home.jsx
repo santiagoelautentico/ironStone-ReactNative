@@ -1,3 +1,4 @@
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import {
   ScrollView,
   Text,
@@ -6,8 +7,8 @@ import {
   StyleSheet,
   Button,
   Image,
+  TextInput,
 } from "react-native";
-import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setCoins } from "../redux/slices/coinsReducer.js";
 import {
@@ -20,8 +21,6 @@ import Transaction from "../components/Transaction.jsx";
 import { LinearGradient } from "expo-linear-gradient";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { Picker } from "@react-native-picker/picker";
-import { TextInput } from "react-native";
 import { Stack } from "expo-router";
 import { useHeaderHeight } from "@react-navigation/elements";
 
@@ -40,6 +39,7 @@ const Home = () => {
   const [selectedCoin, setSelectedCoin] = useState("");
   const [handleTrasacction, setHandleTransaction] = useState(0);
   const [msgTotal, setMsjTotal] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const bgTop = require("../assets/backgroundTop.png");
 
@@ -48,7 +48,11 @@ const Home = () => {
   const bottomSheetRef = useRef(null);
 
   const handleOpenModal = () => bottomSheetRef.current?.expand();
-  const handleCloseModal = () => bottomSheetRef.current?.close();
+  const handleCloseModal = () => {
+    setSelectedCoin("");
+    setIsDropdownOpen(false);
+    bottomSheetRef.current?.close();
+  };
 
   useEffect(() => {
     fetch("https://crypto.develotion.com/monedas.php", {
@@ -79,29 +83,29 @@ const Home = () => {
       .catch((error) => console.error(error));
   }, []);
 
-  const handlerValue = (text) => {
-    const value = Number(text);
-    setCantCoin(value);
-    console.log(value, "cantCoin");
+  const handlerValue = (cant) => {
+    const numCant = Number(cant);
+    setCantCoin(numCant);
     const selectedCoinData = coins.find(
       (coin) => coin.id === parseInt(selectedCoin)
     );
-    setMsjTotal(selectedCoinData ? selectedCoinData.cotizacion * value : 0);
-    console.log(msgTotal, "msgTotal");
+    setMsjTotal(selectedCoinData ? selectedCoinData.cotizacion * numCant : 0);
   };
+
   const handlerBuy = () => {
+    const selectedCoinData = coins.find(
+      (coin) => coin.id === parseInt(selectedCoin)
+    );
     const cant = Number(cantCoin);
     let trasactionFetch = {
       idUsuario: userId,
       tipoOperacion: handleTrasacction,
       moneda: Number(selectedCoin),
       cantidad: cant,
-      valorActual: msgTotal,
+      valorActual: selectedCoinData.cotizacion,
     };
 
-    console.log(msgTotal, "total");
-
-    if (cant === 0 || selectedCoin === 0 || handleTrasacction === 0) {
+    if (cant === 0 || selectedCoin === "" || handleTrasacction === 0) {
       console.log("Error en la compra");
     } else {
       fetch("https://crypto.develotion.com/transacciones.php", {
@@ -138,7 +142,11 @@ const Home = () => {
               headerTitle: () => (
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <Text
-                    style={{ color: "#fff", marginLeft: 8, fontWeight: "bold" }}
+                    style={{
+                      color: "#fff",
+                      marginLeft: 8,
+                      fontWeight: "bold",
+                    }}
                   >
                     IronStone
                   </Text>
@@ -196,41 +204,76 @@ const Home = () => {
         </ScrollView>
         <BottomSheet
           snapPoints={snapPoints}
-          index={1}
+          index={-1}
           ref={bottomSheetRef}
           enablePanDownToClose={true}
-          backgroundStyle={{ backgroundColor: "#121212" }}
+          backgroundStyle={{ backgroundColor: "black" }}
           handleIndicatorStyle={{ backgroundColor: "white" }}
+          onClose={handleCloseModal}
+          onOpen={handleOpenModal}
+          detached={true}
         >
           <BottomSheetView style={styles.contentContainer}>
-            <Text style={styles.titleBuy}>Elige una moneda</Text>
-            <Picker
-              selectedValue={selectedCoin}
-              onValueChange={(coinValue) => setSelectedCoin(coinValue)}
-              style={styles.picker}
-            >
-              <Picker.Item
-                label="Seleccione una moneda"
-                value=""
-                key="0"
-                disabled
+            <Text style={styles.titleBuy}>
+              {handleTrasacction === 1
+                ? "Compra de Criptos"
+                : "Venta de Criptos"}
+            </Text>
+            <View>
+              <Text style={styles.label}>Moneda:</Text>
+              <TouchableOpacity
+                onPress={() => setIsDropdownOpen(!isDropdownOpen)}
+                style={styles.dropdown}
+              >
+                <Text style={styles.dropdownText}>
+                  {selectedCoin
+                    ? coins.find((coin) => coin.id === parseInt(selectedCoin))
+                        ?.nombre
+                    : "Seleccione una moneda"}
+                </Text>
+              </TouchableOpacity>
+              {isDropdownOpen && (
+                <ScrollView style={styles.dropdownList}>
+                  {coins.map((coin) => (
+                    <TouchableOpacity
+                      key={coin.id}
+                      style={styles.dropdownItem}
+                      onPress={() => {
+                        setSelectedCoin(coin.id.toString());
+                        setIsDropdownOpen(false);
+                      }}
+                    >
+                      <Text style={styles.dropdownItemText}>{coin.nombre}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              )}
+            </View>
+            <View>
+              <Text style={styles.label}>Cantidad:</Text>
+              <TextInput
+                placeholder="Ingrese una cantidad"
+                placeholderTextColor="#A7A7A7"
+                value={cantCoin.toString()}
+                style={styles.input}
+                onChangeText={(cant) => handlerValue(cant)}
               />
-              {coins.map((coin) => (
-                <Picker.Item
-                  key={coin.id}
-                  label={coin.nombre}
-                  value={coin.id}
-                />
-              ))}
-            </Picker>
-            <TextInput
-              placeholder="Ingrese una cantidad"
-              value={cantCoin.toString()}
-              style={styles.input}
-              onChangeText={(text) => handlerValue(text)}
-            />
-            <Button title="Comprar" onPress={handlerBuy} color="#007bff" />
-            {msgTotal > 0 && <Text>{msgTotal}</Text>}
+            </View>
+
+            {msgTotal > 0 && (
+              <Text style={styles.msgTotal}>
+                {handleTrasacction === 1 ? "Gasto total: " : "Ganancia de: "} $
+                {msgTotal}
+              </Text>
+            )}
+            <LinearGradient
+              colors={["#3740DD", "#545BE7"]}
+              style={styles.gradientBuyBottom}
+            >
+              <TouchableOpacity onPress={handlerBuy} style={styles.button}>
+                <Text style={styles.textButton}>Comprar</Text>
+              </TouchableOpacity>
+            </LinearGradient>
           </BottomSheetView>
         </BottomSheet>
       </GestureHandlerRootView>
@@ -266,12 +309,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     paddingHorizontal: 40,
     marginBottom: 20,
+    color: "white",
   },
   input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
+    borderWidth: 2,
+    borderColor: "#393E46",
     padding: 10,
     borderRadius: 5,
+    color: "white",
+    backgroundColor: "#707070",
   },
   containerButtons: {
     display: "flex",
@@ -292,6 +338,13 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     alignItems: "center",
   },
+  gradientBuyBottom: {
+    marginHorizontal: 100,
+    paddingVertical: 20,
+    alignItems: "center",
+    borderRadius: 10,
+  },
+
   gradientSell: {
     width: "48%",
     borderRadius: 10,
@@ -301,9 +354,10 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#171717",
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    backgroundColor: "black",
+    gap: 15,
   },
   bgTop: {
     position: "absolute",
@@ -315,11 +369,49 @@ const styles = StyleSheet.create({
   titleBuy: {
     color: "white",
     fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
   },
-  picker: {
-    height: 50,
+  dropdown: {
+    width: "100%",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: "#707070",
+    marginBottom: 10,
+  },
+  dropdownText: {
     color: "white",
-    backgroundColor: "#333333",
+  },
+  dropdownList: {
+    zIndex: 100,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    backgroundColor: "#707070",
+    maxHeight: 150,
+    position: "absolute",
+    width: "100%",
+    top: 80,
+  },
+  dropdownItem: {
+    padding: 10,
+  },
+  dropdownItemText: {
+    color: "white",
+  },
+  label: {
+    color: "white",
+    fontSize: 16,
+    paddingBottom: 10,
+  },
+  msgTotal: {
+    color: "white",
+    fontSize: 18,
+    textAlign: "center",
+    fontWeight: "bold",
+    paddingVertical: 5,
   },
 });
 

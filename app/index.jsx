@@ -17,7 +17,7 @@ import {
 import { useDispatch } from "react-redux";
 import { router } from "expo-router";
 
-const Login = () => {
+const index = () => {
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
@@ -89,32 +89,42 @@ const Login = () => {
   );
 };
 const styles = StyleSheet.create({
-
+  container: {
+    flex: 1,
+    backgroundColor: "#171717",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
     textAlign: "center",
+    color: "white",
   },
   formInput: {
     marginBottom: 15,
+    color: "white",
   },
   label: {
     fontSize: 16,
     marginBottom: 5,
+    color: "white",
   },
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
     padding: 10,
     borderRadius: 5,
+    color: "white",
   },
   link: {
     marginTop: 15,
     color: "#007bff",
     textAlign: "center",
     textDecorationLine: "underline",
+    color: "white",
   },
 });
 
-export default Login;
+export default index;

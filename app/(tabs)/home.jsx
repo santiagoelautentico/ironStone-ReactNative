@@ -10,21 +10,21 @@ import {
   TextInput,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { setCoins } from "../redux/slices/coinsReducer.js";
+import { setCoins } from "../../redux/slices/coinsReducer.js";
 import {
   setTransactions,
   addTransaction,
-} from "../redux/slices/transactionReducer.js";
+} from "../../redux/slices/transactionReducer.js";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import TotalInvested from "../components/TotalInvested.jsx";
-import Transaction from "../components/Transaction.jsx";
+import TotalInvested from "../../components/TotalInvested.jsx";
+import Transaction from "../../components/Transaction.jsx";
 import { LinearGradient } from "expo-linear-gradient";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Stack } from "expo-router";
 import { useHeaderHeight } from "@react-navigation/elements";
 
-const Home = () => {
+const home = () => {
   const headerHeight = useHeaderHeight();
 
   const username = useSelector((state) => state.login.username);
@@ -41,9 +41,9 @@ const Home = () => {
   const [msgTotal, setMsjTotal] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const bgTop = require("../assets/backgroundTop.png");
+  const bgTop = require("../../assets/backgroundTop.png");
 
-  const snapPoints = useMemo(() => ["50%"], []);
+  const snapPoints = useMemo(() => ["75%"], []);
 
   const bottomSheetRef = useRef(null);
 
@@ -132,28 +132,6 @@ const Home = () => {
           <Image source={bgTop} />
         </View>
         <ScrollView style={{ paddingTop: headerHeight }}>
-          <Stack.Screen
-            options={{
-              headerBlurEffect: "regular",
-              headerTransparent: true,
-              headerTitleStyle: {
-                fontWeight: "bold",
-              },
-              headerTitle: () => (
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <Text
-                    style={{
-                      color: "#fff",
-                      marginLeft: 8,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    IronStone
-                  </Text>
-                </View>
-              ),
-            }}
-          />
           <View style={styles.header}>
             <MaterialCommunityIcons
               name="face-man-profile"
@@ -292,7 +270,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 10,
     paddingHorizontal: 40,
-    paddingTop: 40,
+    paddingTop: 80,
   },
   containerHeader: {
     paddingTop: 40,
@@ -415,4 +393,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+export default home;

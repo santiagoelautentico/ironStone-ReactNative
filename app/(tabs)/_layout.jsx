@@ -1,6 +1,7 @@
 import { Tabs } from "expo-router";
 import { StyleSheet } from "react-native";
 import Entypo from "@expo/vector-icons/Entypo";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 export default () => {
   return (
@@ -19,12 +20,14 @@ export default () => {
               name="home"
               size={24}
               color="#3740DD"
-              style={{ color: focused ? '#3740DD' : 'gray' }} // Cambia la opacidad aquí
+              style={{ color: focused ? "#3740DD" : "gray" }}
             />
           ),
         }}
       />
-      <Tabs.Screen name="charts" />
+      <Tabs.Screen name="charts" options={{headerBlurEffect: true,headerTransparent: true ,headerTitle: "Graficos", headerTitleStyle: {color: "white"}, tabBarIcon: ({ focused }) => (
+        <FontAwesome6 name="chart-line" size={24} color="#3740DD" style={{color: focused ? "#3740DD" : "gray"}} />
+      ) }} />
     </Tabs>
   );
 };

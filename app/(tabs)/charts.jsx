@@ -33,7 +33,6 @@ export default function Charts() {
       value: total,
       label: getCoinName(parseInt(coinId)),
       frontColor: "#1B6BB0",
-      gradientColor: "#FFEEFE",
     })
   );
 
@@ -55,7 +54,6 @@ export default function Charts() {
       value: total,
       label: getCoinName(parseInt(coinId)),
       frontColor: "#FF5733",
-      gradientColor: "#FFC371",
     })
   );
 
@@ -100,9 +98,7 @@ export default function Charts() {
           spacing={55}
           width={300}
           rulesType="none"
-          showGradient
           frontColor={"#1B6BB0"}
-          gradientColor={"#FFEEFE"}
           yAxisTextStyle={{
             color: "gray",
             fontFamily: "PP Mondwest",
@@ -149,9 +145,7 @@ export default function Charts() {
           spacing={55}
           width={300}
           rulesType="none"
-          showGradient
           frontColor={"#FF5733"}
-          gradientColor={"#FFC371"}
           yAxisTextStyle={{
             color: "gray",
             fontFamily: "PP Mondwest",

@@ -131,7 +131,7 @@ const home = () => {
         <View style={{ flex: 1, flexGrow: 1 }}>
           <Image source={bgTop} />
         </View>
-        <ScrollView style={{ paddingTop: headerHeight }}>
+        <ScrollView style={{ paddingTop: 40 }}>
           <View style={styles.header}>
             <MaterialCommunityIcons
               name="face-man-profile"
@@ -249,7 +249,7 @@ const home = () => {
               style={styles.gradientBuyBottom}
             >
               <TouchableOpacity onPress={handlerBuy} style={styles.button}>
-                <Text style={styles.textButton}>Comprar</Text>
+                <Text style={styles.textButton}>{handleTrasacction === 1 ? "Comprar" : "Vender"}</Text>
               </TouchableOpacity>
             </LinearGradient>
           </BottomSheetView>
@@ -270,10 +270,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 10,
     paddingHorizontal: 40,
-    paddingTop: 80,
+    paddingTop: 20,
   },
   containerHeader: {
-    paddingTop: 40,
+    paddingTop: 20,
     paddingBottom: 40,
     paddingHorizontal: 40,
     gap: 20,

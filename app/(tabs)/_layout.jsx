@@ -46,10 +46,7 @@ export default () => {
       <Tabs.Screen
         name="notifications"
         options={{
-          headerBlurEffect: true,
-          headerTransparent: true,
-          headerTitle: "Notificaciones",
-          headerTitleStyle: { color: "white" },
+          headerShown: false,
           tabBarIcon: ({ focused }) => (
             <FontAwesome name="bell" size={24} color="#3740DD" style={{ color: focused ? "#3740DD" : "gray" }} />
           ),
